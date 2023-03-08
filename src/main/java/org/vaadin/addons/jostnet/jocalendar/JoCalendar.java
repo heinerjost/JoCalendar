@@ -14,13 +14,12 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.orderedlayout.FlexLayout;
+import com.vaadin.flow.component.orderedlayout.FlexLayout.ContentAlignment;
 import com.vaadin.flow.component.orderedlayout.FlexLayout.FlexDirection;
-import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
 @Tag("JoCalendar")
 @CssImport("./css/style.css")
-public class JoCalendar extends VerticalLayout
+public class JoCalendar extends Div
 {
 
 	private LocalDate datum;
@@ -34,13 +33,12 @@ public class JoCalendar extends VerticalLayout
 		add(createMonth());
 	}
 
-	private FlexLayout createToolbar()
+	private Div createToolbar()
 	{
-		FlexLayout toolbar = new FlexLayout();
+		Div toolbar = new Div();
+		toolbar.addClassName("jocalendar-topheader");
 
-		HorizontalLayout left = new HorizontalLayout();
-		left.setSpacing(false);
-		left.setMargin(false);
+		Div left = new Div();
 
 		Button b1 = new Button("<<");
 		left.add(b1);
@@ -65,9 +63,7 @@ public class JoCalendar extends VerticalLayout
 
 		toolbar.add(center);
 
-		HorizontalLayout right = new HorizontalLayout();
-		right.setSpacing(false);
-		right.setMargin(false);
+		Div right = new Div();
 
 		Button monat = new Button("Monat");
 		right.add(monat);
@@ -83,21 +79,16 @@ public class JoCalendar extends VerticalLayout
 
 		toolbar.add(right);
 
-		toolbar.setWidthFull();
-		toolbar.setFlexDirection(FlexDirection.ROW);
-		toolbar.setJustifyContentMode(JustifyContentMode.BETWEEN);
-
 		return toolbar;
 	}
 
-	private FlexLayout createMonth()
+	private Div createMonth()
 	{
-		FlexLayout month = new FlexLayout();
-		month.setFlexDirection(FlexDirection.COLUMN);
-		month.setHeightFull();
+		Div month = new Div();
+		month.addClassName("jocalendar-month");
 
-		FlexLayout days = new FlexLayout();
-		days.setWidthFull();
+		Div days = new Div();
+		days.addClassName("jocalendar-month-header");
 		
 		days.add(new TagHeader("Mo"));
 		days.add(new TagHeader("Di"));
@@ -106,8 +97,6 @@ public class JoCalendar extends VerticalLayout
 		days.add(new TagHeader("Fr"));
 		days.add(new TagHeader("Sa"));
 		days.add(new TagHeader("So"));
-		days.setFlexDirection(FlexDirection.ROW);
-		days.setJustifyContentMode(JustifyContentMode.EVENLY);
 		month.add(days);
 
 		LocalDate tmp = datum.withDayOfMonth(1).with(DayOfWeek.MONDAY);
@@ -115,9 +104,12 @@ public class JoCalendar extends VerticalLayout
 		LocalDate end = datum.plus(1, ChronoUnit.MONTHS).withDayOfMonth(1);
 		while (tmp.isBefore(end))
 		{
-			FlexLayout d1 = new FlexLayout();
-			d1.setWidthFull();
-			d1.setHeightFull();
+			Div d1 = new Div();
+			d1.addClassName("jocalendar-month-table");
+//			d1.setWidthFull();
+//			d1.setHeightFull();
+//			d1.setAlignContent(ContentAlignment.STRETCH);
+
 			for (int i = 0; i < 7; i++)
 			{
 				DayItem dayItem = new DayItem(tmp);
@@ -125,14 +117,21 @@ public class JoCalendar extends VerticalLayout
 				{
 					CalendarEntry ce = new CalendarEntry();
 					ce.setDate(LocalDateTime.now());
-					ce.setDescription("Heute");
+					ce.setDescription("Heute blablubb blubberup");
 					dayItem.addEntry(ce);
+					CalendarEntry ce2 = new CalendarEntry();
+					ce2.setDate(LocalDateTime.now());
+					ce2.setDescription("Heute 2");
+					dayItem.addEntry(ce2);
+					CalendarEntry ce3 = new CalendarEntry();
+					ce3.setDate(LocalDateTime.now());
+					ce3.setDescription("Heute 2");
+					dayItem.addEntry(ce3);
 				}
 				d1.add(dayItem);
 				tmp = tmp.plus(1, ChronoUnit.DAYS);
 			}
-			d1.setFlexDirection(FlexDirection.ROW);
-			d1.setJustifyContentMode(JustifyContentMode.EVENLY);
+//			d1.setFlexDirection(FlexDirection.ROW);
 			month.add(d1);
 		}
 		return month;

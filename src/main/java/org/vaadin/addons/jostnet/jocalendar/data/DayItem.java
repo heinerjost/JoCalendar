@@ -6,13 +6,10 @@ import java.time.temporal.ChronoField;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Label;
-import com.vaadin.flow.component.orderedlayout.FlexLayout;
-import com.vaadin.flow.component.orderedlayout.FlexLayout.FlexDirection;
-import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 
-public class DayItem extends VerticalLayout
+public class DayItem extends Div
 {
 	private static final long serialVersionUID = 4330132873154455934L;
 
@@ -21,38 +18,37 @@ public class DayItem extends VerticalLayout
 	public DayItem(LocalDate tag)
 	{
 		super();
-		setMargin(false);
-		setPadding(false);
-		setSpacing(false);
-		setMinHeight("100px");
-		setWidthFull();
-		setHeightFull();
-		FlexLayout header = new FlexLayout();
-		header.setFlexDirection(FlexDirection.ROW);
-		header.setJustifyContentMode(JustifyContentMode.BETWEEN);
-		header.setWidthFull();
-		header.setHeightFull();
 
+		this.addClassName("jocalendar-month-day");
+
+		Div header = new Div();
+		header.addClassName("jocalendar-month-day-header");
 		if (tag.getDayOfWeek() == DayOfWeek.MONDAY)
 		{
 			int kw = tag.get(ChronoField.ALIGNED_WEEK_OF_YEAR);
-			header.add(new Label("KW" + kw));
+			Div head1 = new Div();
+			head1.addClassName("jocalendar-month-day-header-element");
+			head1.setText("KW" + kw);
+			header.add(head1);
 		}
 		else
 		{
-			header.add(new Label(""));
+			Div head1 = new Div();
+			head1.addClassName("jocalendar-month-day-header-element");
+			head1.setText("");
 		}
-		header.add(new Label(tag.getDayOfMonth() + ""));
-		header.addClassName("jocalendar-dayitem-header");
+		Div head2 = new Div();
+		head2.addClassName("jocalendar-month-day-header-element");
+		head2.setText(tag.getDayOfMonth() + "");
+		header.add(head2);
 		add(header);
-		this.addClassName("jocalendar-border");
-
 	}
 
 	public void addEntry(CalendarEntry entry)
 	{
 		entries.add(entry);
-		HorizontalLayout layout = new HorizontalLayout();
+		Div layout = new Div();
+		layout.addClassName("jocalendar-month-day-body");
 		layout.add(entry.getDescription());
 		add(layout);
 	}
