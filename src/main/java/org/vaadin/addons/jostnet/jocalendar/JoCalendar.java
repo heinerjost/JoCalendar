@@ -5,9 +5,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
-import java.time.temporal.TemporalField;
-import java.time.temporal.WeekFields;
-import java.util.Locale;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.vaadin.addons.jostnet.jocalendar.data.CalendarEntry;
 import org.vaadin.addons.jostnet.jocalendar.data.CalendarSupplier;
@@ -28,6 +27,8 @@ public class JoCalendar extends Div
 
 	private LocalDate datum;
 
+	private Map<LocalDate, DayItem> datemap;
+
 	private CalendarSupplier[] calendarSuppliers;
 
 	private ViewType viewType;
@@ -38,11 +39,28 @@ public class JoCalendar extends Div
 			CalendarSupplier... calendarSuppliers)
 	{
 		this.datum = datum;
-		add(createToolbar());
-		add(createMonth());
 		this.viewType = viewType;
 		this.calendarSuppliers = calendarSuppliers;
-		setActualPeriod();
+		createView();
+	}
+
+	private void createView()
+	{
+		this.removeAll();
+		createMap();
+		switch (viewType)
+		{
+			case MONTH:
+				actualPeriod
+						.setText(DateTimeFormatter.ofPattern("MMMM yyyy").format(datum));
+				break;
+			case WEEK:
+				actualPeriod.setText(
+						DateTimeFormatter.ofPattern("dd.MM.yyyy").format(getFrom()) + " - "
+								+ DateTimeFormatter.ofPattern("dd.MM.yyyy").format(getTo()));
+		}
+		add(createToolbar());
+		add(createMonth());
 	}
 
 	private Div createToolbar()
@@ -61,7 +79,7 @@ public class JoCalendar extends Div
 					datum = datum.minus(1, ChronoUnit.YEARS);
 					break;
 			}
-			setActualPeriod();
+			createView();
 		});
 		left.add(b1);
 
@@ -74,7 +92,7 @@ public class JoCalendar extends Div
 					datum = datum.minus(1, ChronoUnit.MONTHS);
 					break;
 			}
-			setActualPeriod();
+			createView();
 		});
 		left.add(b2);
 
@@ -82,7 +100,7 @@ public class JoCalendar extends Div
 		heute.addClickListener(e ->
 		{
 			datum = LocalDate.now();
-			setActualPeriod();
+			createView();
 		});
 		left.add(heute);
 
@@ -95,7 +113,7 @@ public class JoCalendar extends Div
 					datum = datum.plus(1, ChronoUnit.MONTHS);
 					break;
 			}
-			setActualPeriod();
+			createView();
 		});
 		left.add(b3);
 
@@ -108,7 +126,7 @@ public class JoCalendar extends Div
 					datum = datum.plus(1, ChronoUnit.YEARS);
 					break;
 			}
-			setActualPeriod();
+			createView();
 		});
 		left.add(b4);
 
@@ -123,7 +141,7 @@ public class JoCalendar extends Div
 		monat.addClickListener(e ->
 		{
 			viewType = ViewType.MONTH;
-			setActualPeriod();
+			createView();
 		});
 		right.add(monat);
 
@@ -131,7 +149,7 @@ public class JoCalendar extends Div
 		woche.addClickListener(e ->
 		{
 			viewType = ViewType.WEEK;
-			setActualPeriod();
+			createView();
 		});
 		right.add(woche);
 
@@ -139,7 +157,7 @@ public class JoCalendar extends Div
 		tag.addClickListener(e ->
 		{
 			viewType = ViewType.DAY;
-			setActualPeriod();
+			createView();
 		});
 		right.add(tag);
 
@@ -147,7 +165,7 @@ public class JoCalendar extends Div
 		terminuebersicht.addClickListener(e ->
 		{
 			viewType = ViewType.LIST;
-			setActualPeriod();
+			createView();
 		});
 		right.add(terminuebersicht);
 
@@ -173,55 +191,77 @@ public class JoCalendar extends Div
 		days.add(new TagHeader("So"));
 		month.add(days);
 
-		LocalDate tmp = datum.withDayOfMonth(1).with(DayOfWeek.MONDAY);
+		LocalDate tmp = getFrom();
+		LocalDate end = getTo();
 
-		LocalDate end = datum.plus(1, ChronoUnit.MONTHS).withDayOfMonth(1);
 		while (tmp.isBefore(end))
 		{
 			Div d1 = new Div();
 			d1.addClassName("jocalendar-month-table");
 			for (int i = 0; i < 7; i++)
 			{
-				DayItem dayItem = new DayItem(tmp);
-				if (tmp.equals(LocalDate.now()))
-				{
-					CalendarEntry ce = new CalendarEntry();
-					ce.setDate(LocalDateTime.now());
-					ce.setDescription("Heute blablubb blubberup");
-					dayItem.addEntry(ce);
-					CalendarEntry ce2 = new CalendarEntry();
-					ce2.setDate(LocalDateTime.now());
-					ce2.setDescription("Heute 2");
-					dayItem.addEntry(ce2);
-					CalendarEntry ce3 = new CalendarEntry();
-					ce3.setDate(LocalDateTime.now());
-					ce3.setDescription("Heute 2");
-					dayItem.addEntry(ce3);
-				}
+				DayItem dayItem = datemap.get(tmp);
 				d1.add(dayItem);
 				tmp = tmp.plus(1, ChronoUnit.DAYS);
 			}
-//			d1.setFlexDirection(FlexDirection.ROW);
 			month.add(d1);
 		}
 		return month;
 	}
 
-	private void setActualPeriod()
+	private LocalDate getFrom()
 	{
 		switch (viewType)
 		{
 			case MONTH:
-				actualPeriod
-						.setText(DateTimeFormatter.ofPattern("MMMM yyyy").format(datum));
-				break;
+				return datum.withDayOfMonth(1).with(DayOfWeek.MONDAY);
 			case WEEK:
-				LocalDate start = datum.with(DayOfWeek.MONDAY);
-				LocalDate end = datum.with(DayOfWeek.SUNDAY);
-				actualPeriod.setText(
-						DateTimeFormatter.ofPattern("dd.MM.yyyy").format(start) + " - "
-								+ DateTimeFormatter.ofPattern("dd.MM.yyyy").format(end));
+				return datum.with(DayOfWeek.MONDAY);
+			case DAY:
+				return datum;
+			case LIST:
+				return datum.withDayOfYear(1);
 		}
+		return null;
+	}
 
+	private LocalDate getTo()
+	{
+		switch (viewType)
+		{
+			case MONTH:
+				return datum.plus(1, ChronoUnit.MONTHS).withDayOfMonth(1)
+						.minus(1, ChronoUnit.DAYS).with(DayOfWeek.SUNDAY);
+			case WEEK:
+				return datum.with(DayOfWeek.SUNDAY);
+			case DAY:
+				return datum;
+			case LIST:
+				return datum.withDayOfYear(datum.isLeapYear() ? 366 : 365);
+		}
+		return null;
+	}
+
+	private void createMap()
+	{
+		// Teil 1: Datenstruktur vorbereiten
+		datemap = new HashMap<>();
+		LocalDate from = getFrom();
+		LocalDate to = getTo();
+		while (!from.isAfter(to))
+		{
+			datemap.put(from, new DayItem(from));
+			from = from.plus(1, ChronoUnit.DAYS);
+		}
+		// Teil 2: Datenstruktur befüllen
+		for (CalendarSupplier cs : calendarSuppliers)
+		{
+			for (CalendarEntry ce : cs.get(getFrom(), getTo()))
+			{
+				System.out.println(ce);
+				DayItem dayItem = datemap.get(ce.getDate().toLocalDate());
+				dayItem.addEntry(ce);
+			}
+		}
 	}
 }
