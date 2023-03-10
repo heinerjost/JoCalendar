@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.Label;
 
 public class DayItem extends Div
 {
@@ -15,7 +14,7 @@ public class DayItem extends Div
 
 	private List<CalendarEntry> entries = new ArrayList<>();
 
-	public DayItem(LocalDate tag)
+	public DayItem(LocalDate day)
 	{
 		super();
 
@@ -23,9 +22,9 @@ public class DayItem extends Div
 
 		Div header = new Div();
 		header.addClassName("jocalendar-month-day-header");
-		if (tag.getDayOfWeek() == DayOfWeek.MONDAY)
+		if (day.getDayOfWeek() == DayOfWeek.MONDAY)
 		{
-			int kw = tag.get(ChronoField.ALIGNED_WEEK_OF_YEAR);
+			int kw = day.get(ChronoField.ALIGNED_WEEK_OF_YEAR);
 			Div head1 = new Div();
 			head1.addClassName("jocalendar-month-day-header-element");
 			head1.setText("KW" + kw);
@@ -39,7 +38,7 @@ public class DayItem extends Div
 		}
 		Div head2 = new Div();
 		head2.addClassName("jocalendar-month-day-header-element");
-		head2.setText(tag.getDayOfMonth() + "");
+		head2.setText(day.getDayOfMonth() + "");
 		header.add(head2);
 		add(header);
 	}
@@ -48,6 +47,8 @@ public class DayItem extends Div
 	{
 		entries.add(entry);
 		Div layout = new Div();
+		layout.getStyle().set("color", entry.getForegroundColor());
+		layout.getStyle().set("backgroundColor", entry.getBackgroundColor());
 		layout.addClassName("jocalendar-month-day-body");
 		layout.add(entry.getDescription());
 		add(layout);

@@ -13,6 +13,10 @@ public class CalendarEntry
 
 	private String description;
 
+	private String foregroundColor = "black";
+
+	private String backgroundColor = "white";
+
 	public void setDate(LocalDate date)
 	{
 		this.date = LocalDateTime.of(date, LocalTime.MIN);
@@ -46,5 +50,33 @@ public class CalendarEntry
 	public String getDescription()
 	{
 		return this.description;
+	}
+
+	public void setForegroundColor(String color)
+	{
+		this.foregroundColor = color;
+	}
+
+	public String getForegroundColor()
+	{
+		return foregroundColor;
+	}
+
+	public void setBackgroundColor(String color)
+	{
+		this.backgroundColor = color;
+	}
+
+	public String getBackgroundColor()
+	{
+		return backgroundColor;
+	}
+
+	@Override
+	public String toString()
+	{
+		return "Date: " + date + ", timeto: " + timeto + ", description: "
+				+ description + ", foregroundColor: " + foregroundColor
+				+ ", backgroundColor: " + backgroundColor;
 	}
 }
