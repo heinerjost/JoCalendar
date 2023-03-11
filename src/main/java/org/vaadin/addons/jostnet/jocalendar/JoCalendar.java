@@ -2,7 +2,6 @@ package org.vaadin.addons.jostnet.jocalendar;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
@@ -258,7 +257,6 @@ public class JoCalendar extends Div
 		{
 			for (CalendarEntry ce : cs.get(getFrom(), getTo()))
 			{
-				System.out.println(ce);
 				DayItem dayItem = datemap.get(ce.getDate().toLocalDate());
 				dayItem.addEntry(ce);
 			}

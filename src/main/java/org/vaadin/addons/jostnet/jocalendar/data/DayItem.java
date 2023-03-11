@@ -45,12 +45,7 @@ public class DayItem extends Div
 
 	public void addEntry(CalendarEntry entry)
 	{
+		add(entry);
 		entries.add(entry);
-		Div layout = new Div();
-		layout.getStyle().set("color", entry.getForegroundColor());
-		layout.getStyle().set("backgroundColor", entry.getBackgroundColor());
-		layout.addClassName("jocalendar-month-day-body");
-		layout.add(entry.getDescription());
-		add(layout);
 	}
 }

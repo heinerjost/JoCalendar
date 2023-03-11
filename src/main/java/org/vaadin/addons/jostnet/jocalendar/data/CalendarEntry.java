@@ -5,78 +5,41 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
-public class CalendarEntry
+import com.vaadin.flow.component.html.Div;
+
+public class CalendarEntry extends Div
 {
+	private static final long serialVersionUID = 1L;
+
 	private LocalDateTime date;
 
 	private Time timeto;
 
-	private String description;
-
-	private String foregroundColor = "black";
-
-	private String backgroundColor = "white";
-
-	public void setDate(LocalDate date)
-	{
-		this.date = LocalDateTime.of(date, LocalTime.MIN);
-	}
-
-	public void setDate(LocalDateTime date)
+	public CalendarEntry(LocalDateTime date, 
+			String description,String foregroundColor, String backgroundColor)
 	{
 		this.date = date;
+		getStyle().set("color", foregroundColor);
+		getStyle().set("backgroundColor", backgroundColor);
+		addClassName("jocalendar-month-day-body");
+		setText(description);
+	}
+
+	public CalendarEntry(LocalDate date, String description,
+			String foregroundColor, String backgroundColor)
+	{
+		this(LocalDateTime.of(date, LocalTime.MIN), description, foregroundColor,
+				backgroundColor);
 	}
 
 	public LocalDateTime getDate()
 	{
-		return this.date;
-	}
-
-	public void setTimeto(Time timeto)
-	{
-		this.timeto = timeto;
-	}
-
-	public Time getTimeto()
-	{
-		return this.timeto;
-	}
-
-	public void setDescription(String description)
-	{
-		this.description = description;
-	}
-
-	public String getDescription()
-	{
-		return this.description;
-	}
-
-	public void setForegroundColor(String color)
-	{
-		this.foregroundColor = color;
-	}
-
-	public String getForegroundColor()
-	{
-		return foregroundColor;
-	}
-
-	public void setBackgroundColor(String color)
-	{
-		this.backgroundColor = color;
-	}
-
-	public String getBackgroundColor()
-	{
-		return backgroundColor;
+		return date;
 	}
 
 	@Override
 	public String toString()
 	{
-		return "Date: " + date + ", timeto: " + timeto + ", description: "
-				+ description + ", foregroundColor: " + foregroundColor
-				+ ", backgroundColor: " + backgroundColor;
+		return "Date: " + date + ", timeto: " + timeto;
 	}
 }
