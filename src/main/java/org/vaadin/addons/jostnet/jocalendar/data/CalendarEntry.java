@@ -1,35 +1,25 @@
 package org.vaadin.addons.jostnet.jocalendar.data;
 
-import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
-import com.vaadin.flow.component.html.Div;
-
-public class CalendarEntry extends Div
+public class CalendarEntry
 {
-	private static final long serialVersionUID = 1L;
-
 	private LocalDateTime date;
 
-	private Time timeto;
+	private LocalDateTime to;
 
-	public CalendarEntry(LocalDateTime date, 
-			String description,String foregroundColor, String backgroundColor)
-	{
-		this.date = date;
-		getStyle().set("color", foregroundColor);
-		getStyle().set("backgroundColor", backgroundColor);
-		addClassName("jocalendar-month-day-body");
-		setText(description);
-	}
+	private String description;
 
-	public CalendarEntry(LocalDate date, String description,
-			String foregroundColor, String backgroundColor)
+	private String color = "black";
+
+	private String backgroundColor = "white";
+
+	public CalendarEntry()
 	{
-		this(LocalDateTime.of(date, LocalTime.MIN), description, foregroundColor,
-				backgroundColor);
+///		addClassName("jocalendar-month-day-body");
+//		setText(description);
 	}
 
 	public LocalDateTime getDate()
@@ -37,9 +27,54 @@ public class CalendarEntry extends Div
 		return date;
 	}
 
-	@Override
-	public String toString()
+	public void setDate(LocalDateTime date)
 	{
-		return "Date: " + date + ", timeto: " + timeto;
+		this.date = date;
 	}
+
+	public void setDate(LocalDate date)
+	{
+		this.date = LocalDateTime.of(date, LocalTime.MIN);
+	}
+
+	public LocalDateTime getTo()
+	{
+		return to;
+	}
+
+	public void setTo(LocalDateTime to)
+	{
+		this.to = to;
+	}
+
+	public String getDescription()
+	{
+		return this.description;
+	}
+
+	public void setDescription(String description)
+	{
+		this.description = description;
+	}
+
+	public String getColor()
+	{
+		return this.color;
+	}
+
+	public void setColor(String color)
+	{
+		this.color = color;
+	}
+
+	public String getBackgroundColor()
+	{
+		return this.backgroundColor;
+	}
+
+	public void setBackgroundColor(String backgroundColor)
+	{
+		this.backgroundColor = backgroundColor;
+	}
+
 }

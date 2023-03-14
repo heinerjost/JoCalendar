@@ -4,13 +4,10 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
-import java.util.HashMap;
-import java.util.Map;
 
-import org.vaadin.addons.jostnet.jocalendar.data.CalendarEntry;
 import org.vaadin.addons.jostnet.jocalendar.data.CalendarSupplier;
-import org.vaadin.addons.jostnet.jocalendar.data.DayItem;
-import org.vaadin.addons.jostnet.jocalendar.data.TagHeader;
+import org.vaadin.addons.jostnet.jocalendar.data.DataBlock;
+import org.vaadin.addons.jostnet.jocalendar.views.MonthView;
 
 import com.vaadin.flow.component.Tag;
 import com.vaadin.flow.component.button.Button;
@@ -25,8 +22,6 @@ public class JoCalendar extends Div
 	private static final long serialVersionUID = -295074448668050244L;
 
 	private LocalDate datum;
-
-	private Map<LocalDate, DayItem> datemap;
 
 	private CalendarSupplier[] calendarSuppliers;
 
@@ -46,7 +41,7 @@ public class JoCalendar extends Div
 	private void createView()
 	{
 		this.removeAll();
-		createMap();
+		DataBlock dataBlock = new DataBlock(datum, viewType, calendarSuppliers);
 		switch (viewType)
 		{
 			case MONTH:
@@ -59,7 +54,12 @@ public class JoCalendar extends Div
 								+ DateTimeFormatter.ofPattern("dd.MM.yyyy").format(getTo()));
 		}
 		add(createToolbar());
-		add(createMonth());
+		switch (viewType)
+		{
+			case MONTH:
+				add(new MonthView(getFrom(), getTo(), dataBlock));
+				break;
+		}
 	}
 
 	private Div createToolbar()
@@ -173,41 +173,6 @@ public class JoCalendar extends Div
 		return toolbar;
 	}
 
-	private Div createMonth()
-	{
-		Div month = new Div();
-		month.addClassName("jocalendar-month");
-
-		Div days = new Div();
-		days.addClassName("jocalendar-month-header");
-
-		days.add(new TagHeader("Mo"));
-		days.add(new TagHeader("Di"));
-		days.add(new TagHeader("Mi"));
-		days.add(new TagHeader("Do"));
-		days.add(new TagHeader("Fr"));
-		days.add(new TagHeader("Sa"));
-		days.add(new TagHeader("So"));
-		month.add(days);
-
-		LocalDate tmp = getFrom();
-		LocalDate end = getTo();
-
-		while (tmp.isBefore(end))
-		{
-			Div d1 = new Div();
-			d1.addClassName("jocalendar-month-table");
-			for (int i = 0; i < 7; i++)
-			{
-				DayItem dayItem = datemap.get(tmp);
-				d1.add(dayItem);
-				tmp = tmp.plus(1, ChronoUnit.DAYS);
-			}
-			month.add(d1);
-		}
-		return month;
-	}
-
 	private LocalDate getFrom()
 	{
 		switch (viewType)
@@ -241,25 +206,4 @@ public class JoCalendar extends Div
 		return null;
 	}
 
-	private void createMap()
-	{
-		// Teil 1: Datenstruktur vorbereiten
-		datemap = new HashMap<>();
-		LocalDate from = getFrom();
-		LocalDate to = getTo();
-		while (!from.isAfter(to))
-		{
-			datemap.put(from, new DayItem(from));
-			from = from.plus(1, ChronoUnit.DAYS);
-		}
-		// Teil 2: Datenstruktur befüllen
-		for (CalendarSupplier cs : calendarSuppliers)
-		{
-			for (CalendarEntry ce : cs.get(getFrom(), getTo()))
-			{
-				DayItem dayItem = datemap.get(ce.getDate().toLocalDate());
-				dayItem.addEntry(ce);
-			}
-		}
-	}
 }

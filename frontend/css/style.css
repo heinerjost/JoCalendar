@@ -30,6 +30,12 @@
 	justify-content: space-between;
 }
 
+.jocalendar-week-table {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+}
+
 .jocalendar-month-day {
 	display: flex;
 	flex-direction: column;
@@ -38,6 +44,16 @@
 	border-width: 1px;
 	border-color: black;
 	min-height: 100px;
+	width: 14.2%;
+}
+.jocalendar-week-day {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	border-style: solid;
+	border-width: 1px;
+	border-color: black;
+	min-height: 100%;
 	width: 14.2%;
 }
 
