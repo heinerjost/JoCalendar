@@ -8,6 +8,7 @@ import java.time.temporal.ChronoUnit;
 import org.vaadin.addons.jostnet.jocalendar.data.CalendarSupplier;
 import org.vaadin.addons.jostnet.jocalendar.data.DataBlock;
 import org.vaadin.addons.jostnet.jocalendar.views.MonthView;
+import org.vaadin.addons.jostnet.jocalendar.views.WeekView;
 
 import com.vaadin.flow.component.Tag;
 import com.vaadin.flow.component.button.Button;
@@ -36,6 +37,7 @@ public class JoCalendar extends Div
 		this.viewType = viewType;
 		this.calendarSuppliers = calendarSuppliers;
 		createView();
+		this.addClassName("jocalendar");
 	}
 
 	private void createView()
@@ -59,6 +61,9 @@ public class JoCalendar extends Div
 			case MONTH:
 				add(new MonthView(getFrom(), getTo(), dataBlock));
 				break;
+			case WEEK:
+				add(new WeekView(getFrom(), getTo(), dataBlock));
+				break;
 		}
 	}
 
@@ -77,6 +82,9 @@ public class JoCalendar extends Div
 				case MONTH:
 					datum = datum.minus(1, ChronoUnit.YEARS);
 					break;
+				case WEEK:
+					datum = datum.minus(1, ChronoUnit.YEARS);
+					break;
 			}
 			createView();
 		});
@@ -88,6 +96,9 @@ public class JoCalendar extends Div
 			switch (viewType)
 			{
 				case MONTH:
+					datum = datum.minus(1, ChronoUnit.MONTHS);
+					break;
+				case WEEK:
 					datum = datum.minus(1, ChronoUnit.MONTHS);
 					break;
 			}
@@ -111,6 +122,9 @@ public class JoCalendar extends Div
 				case MONTH:
 					datum = datum.plus(1, ChronoUnit.MONTHS);
 					break;
+				case WEEK:
+					datum = datum.plus(1, ChronoUnit.MONTHS);
+					break;
 			}
 			createView();
 		});
@@ -122,6 +136,9 @@ public class JoCalendar extends Div
 			switch (viewType)
 			{
 				case MONTH:
+					datum = datum.plus(1, ChronoUnit.YEARS);
+					break;
+				case WEEK:
 					datum = datum.plus(1, ChronoUnit.YEARS);
 					break;
 			}

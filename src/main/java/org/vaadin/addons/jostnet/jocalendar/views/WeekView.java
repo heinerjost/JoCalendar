@@ -12,17 +12,17 @@ import org.vaadin.addons.jostnet.jocalendar.data.TagHeader;
 
 import com.vaadin.flow.component.html.Div;
 
-public class MonthView extends Div
+public class WeekView extends Div
 {
 	private static final long serialVersionUID = 1519402887914157543L;
 
-	public MonthView(LocalDate from, LocalDate to, DataBlock dataBlock)
+	public WeekView(LocalDate from, LocalDate to, DataBlock dataBlock)
 	{
 		super();
-		addClassName("jocalendar-month");
+		addClassName("jocalendar-week");
 
 		Div days = new Div();
-		days.addClassName("jocalendar-month-header");
+		days.addClassName("jocalendar-week-header");
 
 		days.add(new TagHeader("Mo"));
 		days.add(new TagHeader("Di"));
@@ -39,46 +39,44 @@ public class MonthView extends Div
 		while (tmp.isBefore(end))
 		{
 			Div d1 = new Div();
-			d1.addClassName("jocalendar-month-table");
+			d1.addClassName("jocalendar-week-table");
 			for (int i = 0; i < 7; i++)
 			{
 				DayItem dayItem = dataBlock.get(tmp);
 
 				Div daycontainer = new Div();
-				daycontainer.addClassName("jocalendar-month-day");
+				daycontainer.addClassName("jocalendar-week-day");
 
 				Div header = new Div();
-				header.addClassName("jocalendar-month-day-header");
+				header.addClassName("jocalendar-week-day-header");
 				if (dayItem.getDay().getDayOfWeek() == DayOfWeek.MONDAY)
 				{
 					int kw = dayItem.getDay().get(ChronoField.ALIGNED_WEEK_OF_YEAR);
 					Div head1 = new Div();
-					head1.addClassName("jocalendar-month-day-header-element");
+					head1.addClassName("jocalendar-week-day-header-element");
 					head1.setText("KW" + kw);
 					header.add(head1);
 				}
 				else
 				{
 					Div head1 = new Div();
-					head1.addClassName("jocalendar-month-day-header-element");
+					head1.addClassName("jocalendar-week-day-header-element");
 					head1.setText("");
 				}
 				Div head2 = new Div();
-				head2.addClassName("jocalendar-month-day-header-element");
+				head2.addClassName("jocalendar-week-day-header-element");
 				head2.setText(dayItem.getDay().getDayOfMonth() + "");
 				header.add(head2);
 				daycontainer.add(header);
 
-				Div monthBody = new Div();
-				monthBody.addClassName("jocalendar-month-day-body");
-				daycontainer.add(monthBody);
 				for (CalendarEntry ce : dayItem.getEntries())
 				{
 					Div entry = ce.getDiv();
 					entry.setText(ce.getDescription());
+					entry.addClassName("jocalendar-week-day-body");
 					entry.getStyle().set("color", ce.getColor());
 					entry.getStyle().set("backgroundColor", ce.getBackgroundColor());
-					monthBody.add(entry);
+					daycontainer.add(entry);
 				}
 
 				d1.add(daycontainer);
