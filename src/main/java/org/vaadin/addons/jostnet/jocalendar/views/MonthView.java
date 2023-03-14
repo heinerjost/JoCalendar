@@ -71,7 +71,7 @@ public class MonthView extends Div
 
 				for (CalendarEntry ce : dayItem.getEntries())
 				{
-					Div entry = new Div();
+					Div entry = ce.getDiv();
 					entry.setText(ce.getDescription());
 					entry.addClassName("jocalendar-month-day-body");
 					entry.getStyle().set("color", ce.getColor());

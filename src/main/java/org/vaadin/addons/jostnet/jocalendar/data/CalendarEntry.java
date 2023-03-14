@@ -4,6 +4,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
+import com.vaadin.flow.component.html.Div;
+
 public class CalendarEntry
 {
 	private LocalDateTime date;
@@ -15,6 +17,8 @@ public class CalendarEntry
 	private String color = "black";
 
 	private String backgroundColor = "white";
+
+	private Div div = new Div();
 
 	public CalendarEntry()
 	{
@@ -75,6 +79,11 @@ public class CalendarEntry
 	public void setBackgroundColor(String backgroundColor)
 	{
 		this.backgroundColor = backgroundColor;
+	}
+
+	public Div getDiv()
+	{
+		return div;
 	}
 
 }
